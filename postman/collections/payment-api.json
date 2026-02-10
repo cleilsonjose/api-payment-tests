@@ -1,0 +1,204 @@
+{
+  "info": {
+    "name": "Payment API Tests - Zoop Sandbox",
+    "_postman_id": "cleilson-zoop-tests",
+    "description": "Testes para gateway de pagamento Zoop (sandbox)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Autenticação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Token presente', () => {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.access_token).to.be.a('string');",
+              "    pm.environment.set('access_token', jsonData.access_token);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"client_id\": \"{{client_id}}\",\n  \"client_secret\": \"{{client_secret}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/oauth/token",
+          "host": ["{{base_url}}"],
+          "path": ["oauth", "token"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Transação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201', () => {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Transação aprovada', () => {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.equal('approved');",
+              "});",
+              "",
+              "pm.test('Valor correto', () => {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.amount).to.equal(15000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 15000,\n  \"currency\": \"BRL\",\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4111111111111111\",\n  \"card_cvv\": \"123\",\n  \"card_expiration_date\": \"0128\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transactions",
+          "host": ["{{base_url}}"],
+          "path": ["transactions"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Transação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Transação encontrada', () => {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/transactions/{{transaction_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["transactions", "{{transaction_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Validar CVV Inválido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400', () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Erro de CVV', () => {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.equal('invalid_cvv');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 10000,\n  \"currency\": \"BRL\",\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4111111111111111\",\n  \"card_cvv\": \"12\",\n  \"card_expiration_date\": \"0128\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transactions",
+          "host": ["{{base_url}}"],
+          "path": ["transactions"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

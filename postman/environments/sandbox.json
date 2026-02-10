@@ -1,0 +1,35 @@
+{
+  "id": "zoop-sandbox-env",
+  "name": "Zoop Sandbox",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "https://api-sandbox.zoop.com.br/v1/marketplaces",
+      "enabled": true
+    },
+    {
+      "key": "client_id",
+      "value": "mock_client_id_zoop_123456",
+      "enabled": true
+    },
+    {
+      "key": "client_secret",
+      "value": "mock_client_secret_zoop_789012",
+      "enabled": true
+    },
+    {
+      "key": "access_token",
+      "value": "mock_bearer_token_zoop_xyz",
+      "enabled": true
+    },
+    {
+      "key": "transaction_id",
+      "value": "tx_mock_123456789",
+      "enabled": true
+    }
+  ],
+  "timestamp": 1707580800000,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-02-10T16:00:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}
