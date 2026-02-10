@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mock": "json-server --watch db.json --port 3001 --routes routes.json"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "axios": "^1.13.5",
     "dotenv": "^17.2.4",
+    "json-server": "^0.17.4",
     "newman": "^6.2.2"
   }
 }

@@ -1,0 +1,5 @@
+{
+  "/ping": "/health",
+  "/login": "/login",
+  "/transactions": "/transactions"
+}
